@@ -24,47 +24,6 @@ class switch(object):
                 else:
                         return False
 
-def kompas():
-        datas = []
-        r = requests.get(url, headers=headers)
-
-        #print(r.url)
-        #print(r.status_code)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        #print(soup)
-        items = soup.find_all('div', 'article__list clearfix')
-        #print(items)
-        for it in items:
-                try : nm = ''.join(it.find('h3', 'article__title article__title--medium').text.strip().split('\n'))
-                except : nm = ''
-                print(nm)
-                datas.append([nm])
-
-        head = ['Name']
-        writer = csv.writer(open('results/tes.csv', 'w', newline=''))
-        writer.writerow(head)
-
-
-        for d in datas:
-                if any(field.strip() for field in d):  # remove blank rows
-                        try:
-                                writer.writerow(d)
-                        except: ''
-        print('Export Successfully')
-
-
-print("Select site")
-print("1. News")
-print("2. Nasional")
-
-#day = date.today()
-site = int(input('Enter a site : '))
-year = int(input('Enter a year : '))
-month = int(input('Enter a month : '))
-day = int(input('Enter a day : '))
-date1 = date(year, month, day)
-
-#url = 'https://indeks.kompas.com/?site={}&date={}&page=1'.format(site, date1)
 headers = {
         'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         'Accept-Encoding' : 'gzip, deflate, br',
@@ -76,19 +35,68 @@ headers = {
         }
 
 
+def kompas():
+        datas = []
+        r = requests.get(url, headers=headers)
+        #print(r.url)
+        #print(r.status_code)
+        soup = BeautifulSoup(r.text, 'html.parser')
+        #print(soup)
+        items = soup.findAll('div', 'article__list clearfix')
+        #print(items)
+        for it in items:
+            try : nm = ''.join(it.find('h3', 'article__title article__title--medium').text.strip().split('\n'))
+            except : nm = ''
+            print(nm)
+            datas.append([nm])
+
+        head = ['Name']
+        writer = csv.writer(open('results/{}.csv', 'w', newline=''))
+        writer.writerow(head)
+
+
+        for d in datas:
+            if any(field.strip() for field in d):  # remove blank rows
+                try:
+                    writer.writerow(d)
+                except: ''
+        print('Export Successfully')
+
+
+print("Select site")
+print("1. News")
+print("2. Nasional")
+
+#day = date.today()
+site = int(input('Enter a site : '))
+pagein = int(input('Enter a page : '))
+year = int(input('Enter a year : '))
+month = int(input('Enter a month : '))
+day = int(input('Enter a day : '))
+date1 = date(year, month, day)
+
+# for i in range(pagein):
+#     i += 1
+#     url = 'https://indeks.kompas.com/?site=news&date={}&page={}'.format(date1, i)
+#     print(url)
+#     kompas()
+
+
 for case in switch(site):
     if case(1):
-        url = 'https://indeks.kompas.com/?site=news&date={}&page=1'.format(date1)
-        #print(url)
-        kompas()
+        for i in range(pagein):
+            i += 1
+            url = 'https://indeks.kompas.com/?site=news&date={}&page={}'.format(date1, i)
+            print(url)
+            kompas()
         break
     if case(2):
-        url = 'https://indeks.kompas.com/?site=nasional&date={}&page=1'.format(date1)
-        kompas()
+        for i in range(pagein):
+            i += 1
+            url = 'https://indeks.kompas.com/?site=nasional&date={}&page={}'.format(date1, i)
+            print(url)
+            kompas()
         break
     if case():
         print ("something else!")
         break
-
-
-

@@ -74,11 +74,15 @@ date1 = date(year, month, day)
 #     print(url)
 #     kompas()
 
+ head = ['Name']
+ with open('results/{}.csv'.format(site), 'w', newline='') as out:
+      writer = csv.writer(out,delimiter=',')     
+      writer.writerow(head)
 
 for case in switch(site):
-    head = ['Name']
-    writer = csv.writer(open('results/{}.csv'.format(site), 'w', newline=''))
-    writer.writerow(head)
+#     head = ['Name']
+#     writer = csv.writer(open('results/{}.csv'.format(site), 'w', newline=''))
+#     writer.writerow(head)
     if case(1):
         for i in range(pagein):
             i += 1

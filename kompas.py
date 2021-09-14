@@ -36,32 +36,25 @@ headers = {
 
 
 def kompas():
-        datas = []
-        r = requests.get(url, headers=headers)
-        #print(r.url)
-        #print(r.status_code)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        #print(soup)
-        items = soup.findAll('div', 'article__list clearfix')
-        #print(items)
-        for it in items:
-            try : nm = ''.join(it.find('h3', 'article__title article__title--medium').text.strip().split('\n'))
-            except : nm = ''
-            print(nm)
-            datas.append([nm])
+    datas = []
+    r = requests.get(url, headers=headers)
+    #print(r.url)
+    #print(r.status_code)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    #print(soup)
+    items = soup.findAll('div', 'article__list clearfix')
+    #print(items)
+    for it in items:
+        try : nm = ''.join(it.find('h3', 'article__title article__title--medium').text.strip().split('\n'))
+        except : nm = ''
+        print(nm)
+        datas.append([nm])
 
-        head = ['Name']
-        writer = csv.writer(open('results/{}.csv', 'w', newline=''))
-        writer.writerow(head)
-
-
-        for d in datas:
-            if any(field.strip() for field in d):  # remove blank rows
-                try:
-                    writer.writerow(d)
-                except: ''
-        print('Export Successfully')
-
+    for d in datas:
+        if any(field.strip() for field in d):  # remove blank rows
+            try:
+                writer.writerow(d)
+            except: ''
 
 print("Select site")
 print("1. News")
@@ -83,12 +76,16 @@ date1 = date(year, month, day)
 
 
 for case in switch(site):
+    head = ['Name']
+    writer = csv.writer(open('results/{}.csv'.format(site), 'w', newline=''))
+    writer.writerow(head)
     if case(1):
         for i in range(pagein):
             i += 1
             url = 'https://indeks.kompas.com/?site=news&date={}&page={}'.format(date1, i)
             print(url)
             kompas()
+        print('Export Successfully')
         break
     if case(2):
         for i in range(pagein):
@@ -96,6 +93,7 @@ for case in switch(site):
             url = 'https://indeks.kompas.com/?site=nasional&date={}&page={}'.format(date1, i)
             print(url)
             kompas()
+        print('Export Successfully')
         break
     if case():
         print ("something else!")
